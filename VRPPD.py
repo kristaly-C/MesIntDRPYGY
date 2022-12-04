@@ -2,7 +2,7 @@
 import time
 import random
 import math
-import fg
+#import fg
 import numpy as np
 
 def datagen(citySize, seed,min,max):
@@ -101,13 +101,15 @@ def generateDuos(keyList: list, db):
             a = 0
             b = 0
             while a == b :
-                a = random.randint(0,len(available))
-                b = random.randint(0,len(available))
-            pair.append(keyList[a])
-            pair.append(keyList[b])
+                #a = random.randint(0,len(available))
+                #b = random.randint(0,len(available))
+                a = random.choice(available)
+                b = random.choice(available)
+            pair.append(a)
+            pair.append(b)
             pairList.append(pair)
-            available.remove(keyList[a])
-            available.remove(keyList[b])
+            available.remove(a)
+            available.remove(b)
     return pairList
 
 def availablePoints(pairlist: list, keyList: list):
@@ -125,14 +127,14 @@ def setEndPointPairs(cityList: dict, duoList: list):
     return newCityList
 
 
-def findAllCourierRoute(citylist: dict, duos: list ,courier: list, startPoint, rep):
+def findAllCourierRoute(citylist: dict, duos: list ,courier: list, startPoint, rep,tabuSize: int):
     random.seed(34121012)
     tabu = []
     routeNum = len(courier)
     routeBests = []
     bestOverAll = 0
     for i in range(routeNum):
-        a, b = improvedSearching2(citylist,courier[i],duos,1000,startPoint, 5)
+        a, b = improvedSearching2(citylist,courier[i],duos,80,startPoint, tabuSize)
         bestOverAll += a
         routeBests.append(b)
     if routeNum > 1 :
@@ -152,7 +154,7 @@ def findAllCourierRoute(citylist: dict, duos: list ,courier: list, startPoint, r
             recordAttempt = 0
             RbList = []
             for i in range(routeNum):
-                rA, Rb = improvedSearching2(citylist,courier[i],duos,50,startPoint, 5)
+                rA, Rb = improvedSearching2(citylist,courier[i],duos,50,startPoint, tabuSize)
                 recordAttempt += rA
                 RbList.append(Rb)
             if recordAttempt < bestOverAll : 
@@ -240,13 +242,13 @@ def main():
     bad = datagen(10,2,0,20)
     print(bad)
     
-    duos = generateDuos(list(bad.keys()),3)
+    duos = generateDuos(list(bad.keys()),2)
     print("duos: ", duos)
     goodNums = availablePoints(duos,list(bad.keys()))
     print("available: ", goodNums)
     vart = splitForDelivery(goodNums,2)
     print("futarok: ",vart)
-    print(findAllCourierRoute(bad, duos, vart, (10,10),5000))
+    print(findAllCourierRoute(bad, duos, vart, (10,10),7000,10))
     #müködö
     #solution = improvedSearching(bad,1000000,(10,10))
     #print("Solution: ",solution)
