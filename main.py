@@ -2,7 +2,6 @@ import tkinter
 import tkinter.messagebox
 from tkinter.ttk import Label
 import customtkinter
-import gendata
 import grafdraw
 import VRPPD
 
