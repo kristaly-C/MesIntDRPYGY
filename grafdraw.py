@@ -23,8 +23,8 @@ def graphDraw(cityCors: dict, listOfRoutes: list,startPoint):
     for i in range(len(cityCors.keys())):
         g.add_node(ckey[i],pos=cval[i]["coord"])
     
-    colorList = ["gold", "red", "violet", "pink", "limegreen",
-              "blue", "darkorange","skyblue","black"]
+    colorList = ["gold", "red", "violet", "skyblue", "limegreen",
+              "blue", "darkorange","pink","black"]
     for j in range(len(listOfRoutes)):
         for i in range(len(listOfRoutes[j])-1) :
             g.add_edge(listOfRoutes[j][i],listOfRoutes[j][i+1], color=colorList[j])

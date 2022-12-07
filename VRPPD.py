@@ -109,7 +109,7 @@ def findAllCourierRoute(citylist: dict, duos: list ,courier: list, startPoint, r
                 bestOverAll = recordAttempt
                 routeBests= RbList.copy()
                 bestLeghts= rAList.copy()
-                #print("new BEST", recordAttempt , RbList)
+                print("new BEST", recordAttempt , RbList)
     #print(routeBests, bestLeghts)
     return bestOverAll , routeBests , bestLeghts
 
@@ -170,10 +170,9 @@ def improvedSearching2(cityList: dict,keys: list ,duos: list,iteration, startPoi
 
 def VRPPDCalc(randomCitys,numberOfCourier,numberOfTabu,numberOfPair,cycle,StartPoint):
 
-    keyList = list(randomCitys.keys())
-    duos = generateDuos(keyList,numberOfPair)
+    duos = generateDuos(list(randomCitys.keys()),numberOfPair)
 
-    pickableCityes = availablePoints(duos,keyList)
+    pickableCityes = availablePoints(duos,list(randomCitys.keys()))
 
     Couriers = splitForDelivery(pickableCityes,numberOfCourier)
     

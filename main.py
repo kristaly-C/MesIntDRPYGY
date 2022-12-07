@@ -16,6 +16,7 @@ class App(customtkinter.CTk):
     courierNum = 1
     pairNum = 0
     seed = 0
+    cycle = 100
     def __init__(self):
         super().__init__()
 
@@ -25,7 +26,7 @@ class App(customtkinter.CTk):
         self.minsize(400,500)
         
         # create grid 
-        self.grid_rowconfigure((0,1,2,3,4,5), weight=1)
+        self.grid_rowconfigure((0,1,2,3,4,5,6), weight=1)
         self.grid_columnconfigure(0, weight=1)
         
         #slider varosok
@@ -79,10 +80,22 @@ class App(customtkinter.CTk):
         #randomseed
         self.entry = customtkinter.CTkEntry(self, textvariable= tkinter.StringVar(value=5))
         self.entry.grid(row=4, column=0, padx=(20, 20), pady=(20, 20), sticky="nsew")
+
+        #slider cycle
+        self.cycle_frame = customtkinter.CTkFrame(self,)
+        self.cycle_frame.grid(row = 5, column=0, sticky="nsew")
+        self.cycle_frame.grid_rowconfigure( (0, 1,2), weight=1)
+        self.cycle_frame.grid_columnconfigure(0, weight=1)
+        self.lab5 = customtkinter.CTkLabel(self.cycle_frame, text="Number of cycle:", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.lab5.grid(row=0, column=0, padx=10, sticky="ew")
+        self.slider_cycle = customtkinter.CTkSlider(self.cycle_frame, from_=100, to=10000, number_of_steps=99, variable= tkinter.IntVar(value=100) , command=self.setCycle)
+        self.slider_cycle.grid(row=1, column=0, padx=(20, 10), sticky="ew")
+        self.labnum5 = customtkinter.CTkLabel(self.cycle_frame, text= int(self.slider_cycle.get()), font=customtkinter.CTkFont(size=15))
+        self.labnum5.grid(row=2, column=0, padx=10, sticky="ew")
         
         #gomb futtatas
         self.button = customtkinter.CTkButton(master=self, command=self.submit,state = tkinter.DISABLED, text="Run")
-        self.button.grid(row=5, column=0, padx=20, pady=20, sticky="ew")
+        self.button.grid(row=6, column=0, padx=20, pady=20, sticky="ew")
 
     def setCityVar(self, output):
         self.labnum1.configure(text= int(output))
@@ -110,6 +123,10 @@ class App(customtkinter.CTk):
     def setTabu(self, output):
         self.labnum4.configure(text= int(output))
         self.tabuNum = int(output)
+
+    def setCycle(self, output):
+        self.labnum5.configure(text= int(output))
+        self.cycle = int(output)
 
     def courierControl(self,citynum):
         if citynum > 9:
@@ -152,18 +169,15 @@ class App(customtkinter.CTk):
             seed = int(self.entry.get())
         except ValueError:
             seed = 5
-        #print(self.tabuNum, self.courierNum, self.cityNum, self.pairNum, seed)
+        print(self.tabuNum, self.courierNum, self.cityNum, self.pairNum, seed, self.cycle)
         generatedCities = VRPPD.datagen(self.cityNum,seed,0,300)
-        fullLenght, BestRoutes, BestroutsLengts = VRPPD.VRPPDCalc(generatedCities,self.courierNum,self.tabuNum,self.pairNum,5000,(10,10))
-        self.openNewWindow(BestRoutes,BestroutsLengts,fullLenght)
-        if self.courierNum < 10:
-            grafdraw.graphDraw(generatedCities,BestRoutes,(10,10))
+        fullLenght, BestRoutes, BestroutsLengts = VRPPD.VRPPDCalc(generatedCities,self.courierNum,self.tabuNum,self.pairNum,self.cycle,(10,10))
+        self.openNewWindow(BestRoutes,BestroutsLengts,fullLenght,generatedCities)
+    
+    def testFg(self, generatedCities,BestRoutes):
+        grafdraw.graphDraw(generatedCities,BestRoutes,(10,10))
 
-
-    def testFg(self):
-        print("anyad")
-
-    def openNewWindow(self,routeLists,RouteLengts,fullLenght):
+    def openNewWindow(self,routeLists,RouteLengts,fullLenght,generatedCities):
         #window setup
         window = customtkinter.CTkToplevel(self)
         window.geometry("600x400")
@@ -189,8 +203,13 @@ class App(customtkinter.CTk):
         text = text + "Length of the total space covered: " + str(fullLenght)
         resultTexBox.insert("end", text)
         resultTexBox.configure(state="disabled")
-        exportButton = customtkinter.CTkButton(window, command=self.testFg)
+        #button
+        exportButton = customtkinter.CTkButton(window,text="Graph", command= lambda : self.testFg(generatedCities,routeLists))
         exportButton.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+        if self.courierNum > 10:
+            exportButton.configure(state= tkinter.DISABLED)
+
+
 
 if __name__ == "__main__":
     app = App()
