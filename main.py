@@ -17,6 +17,7 @@ class App(customtkinter.CTk):
     pairNum = 0
     seed = 0
     cycle = 100
+    startPoint = (10,10)
     def __init__(self):
         super().__init__()
 
@@ -169,13 +170,13 @@ class App(customtkinter.CTk):
             seed = int(self.entry.get())
         except ValueError:
             seed = 5
-        print(self.tabuNum, self.courierNum, self.cityNum, self.pairNum, seed, self.cycle)
+        #print(self.tabuNum, self.courierNum, self.cityNum, self.pairNum, seed, self.cycle)
         generatedCities = VRPPD.datagen(self.cityNum,seed,0,300)
-        fullLenght, BestRoutes, BestroutsLengts = VRPPD.VRPPDCalc(generatedCities,self.courierNum,self.tabuNum,self.pairNum,self.cycle,(10,10))
+        fullLenght, BestRoutes, BestroutsLengts = VRPPD.VRPPDCalc(generatedCities,self.courierNum,self.tabuNum,self.pairNum,self.cycle,self.startPoint)
         self.openNewWindow(BestRoutes,BestroutsLengts,fullLenght,generatedCities)
     
     def testFg(self, generatedCities,BestRoutes):
-        grafdraw.graphDraw(generatedCities,BestRoutes,(10,10))
+        grafdraw.graphDraw(generatedCities,BestRoutes,self.startPoint)
 
     def openNewWindow(self,routeLists,RouteLengts,fullLenght,generatedCities):
         #window setup
@@ -200,7 +201,7 @@ class App(customtkinter.CTk):
                 conc = str(routeLists[i][j]) + "->"
                 ruu = str(ruu + conc)
             text = text + ruu + "S \n"
-        text = text + "Length of the total space covered: " + str(fullLenght)
+        text = text + "Total distance: " + str(fullLenght)
         resultTexBox.insert("end", text)
         resultTexBox.configure(state="disabled")
         #button

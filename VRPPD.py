@@ -4,7 +4,6 @@ import math
 import numpy as np
 
 def datagen(citySize, seed,min,max):
-    items = []
     citys = {}
     random.seed(seed)
     i = 0
@@ -71,14 +70,14 @@ def availablePoints(pairlist: list, keyList: list):
 
 
 def findAllCourierRoute(citylist: dict, duos: list ,courier: list, startPoint, rep,tabuSize: int):
-    random.seed(34121012)
+    #random.seed(3412)
     bestLeghts = []
     routeNum = len(courier)
     routeBests = []
     bestOverAll = 0
 
     for i in range(routeNum):
-        a, b = improvedSearching2(citylist,courier[i],duos,80,startPoint, tabuSize)
+        a, b = improvedSearching2(citylist,courier[i],duos,rep,startPoint, tabuSize)
         bestOverAll += a
         bestLeghts.append(a)
         routeBests.append(b)
@@ -109,7 +108,7 @@ def findAllCourierRoute(citylist: dict, duos: list ,courier: list, startPoint, r
                 bestOverAll = recordAttempt
                 routeBests= RbList.copy()
                 bestLeghts= rAList.copy()
-                print("new BEST", recordAttempt , RbList)
+                #print("new BEST", recordAttempt , RbList)
     #print(routeBests, bestLeghts)
     return bestOverAll , routeBests , bestLeghts
 
@@ -134,7 +133,7 @@ def improvedSearching2(cityList: dict,keys: list ,duos: list,iteration, startPoi
     #beszúrom a duo hátsó tagjait az első tagok mögé mert úgy is mindig páros lesz
     duoS = duoS + duoE
 
-    random.seed(386512)
+    #random.seed(3862)
 
     for i in range(iteration):
         a = random.randint(1,len(f_oredCopy)-1)
