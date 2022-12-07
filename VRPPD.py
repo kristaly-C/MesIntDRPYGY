@@ -108,7 +108,7 @@ def findAllCourierRoute(citylist: dict, duos: list ,courier: list, startPoint, r
                 bestOverAll = recordAttempt
                 routeBests= RbList.copy()
                 bestLeghts= rAList.copy()
-                print("new BEST", recordAttempt , RbList)
+                #print("new BEST", recordAttempt , RbList)
     #print(routeBests, bestLeghts)
     return bestOverAll , routeBests , bestLeghts
 
