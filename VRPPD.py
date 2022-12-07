@@ -70,7 +70,7 @@ def availablePoints(pairlist: list, keyList: list):
 
 
 def findAllCourierRoute(citylist: dict, duos: list ,courier: list, startPoint, rep,tabuSize: int):
-    #random.seed(3412)
+    random.seed(420)
     bestLeghts = []
     routeNum = len(courier)
     routeBests = []
@@ -108,12 +108,13 @@ def findAllCourierRoute(citylist: dict, duos: list ,courier: list, startPoint, r
                 bestOverAll = recordAttempt
                 routeBests= RbList.copy()
                 bestLeghts= rAList.copy()
-                #print("new BEST", recordAttempt , RbList)
+                print("new BEST", recordAttempt , RbList)
     #print(routeBests, bestLeghts)
     return bestOverAll , routeBests , bestLeghts
 
 
 def improvedSearching2(cityList: dict,keys: list ,duos: list,iteration, startPoint, tabuMaxSize: int):
+    random.seed(420)
     tabuList = []
     duoS = []
     duoE = []
@@ -133,9 +134,9 @@ def improvedSearching2(cityList: dict,keys: list ,duos: list,iteration, startPoi
     #beszúrom a duo hátsó tagjait az első tagok mögé mert úgy is mindig páros lesz
     duoS = duoS + duoE
 
-    #random.seed(3862)
 
     for i in range(iteration):
+        flasback = f_oredCopy.copy()
         a = random.randint(1,len(f_oredCopy)-1)
         aV = f_oredCopy[a]
         if duoS.count(aV) > 0 :
@@ -162,6 +163,8 @@ def improvedSearching2(cityList: dict,keys: list ,duos: list,iteration, startPoi
             tabuList.append(f_oredCopy.copy())
             if len(tabuList) > tabuMaxSize :
                 tabuList.pop(0)
+        else:
+            f_oredCopy = flasback
 
     #print(b_dist, " sorrend " , b_order, " tabulista ", tabuList)
 
